@@ -29,6 +29,12 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              "src/assets",
+              {
+                "glob": "pdf.worker.min.mjs",
+                "input": "src/assets/js",
+                "output": "/assets/js"
               }
             ],
             "styles": [
@@ -88,6 +94,12 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              "src/assets",
+              {
+                "glob": "pdf.worker.min.mjs",
+                "input": "src/assets/js",
+                "output": "/assets/js"
               }
             ],
             "styles": [
