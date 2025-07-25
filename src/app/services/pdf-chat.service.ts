@@ -17,7 +17,8 @@ export interface UploadResponse {
   providedIn: 'root'
 })
 export class PdfChatService {
-  private baseUrl = 'https://pdf-insight-backend.vercel.app';
+  // private baseUrl = 'https://pdf-insight-backend.vercel.app';
+  private baseUrl = 'http://localhost:8000';
 
   constructor(private http: HttpClient) {}
 
