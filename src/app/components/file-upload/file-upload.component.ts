@@ -4,21 +4,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-file-upload',
   imports: [CommonModule],
-  template: `
-    <div class="upload-section">
-      <div class="upload-box" 
-           (dragover)="onDragOver($event)" 
-           (dragleave)="onDragLeave($event)"
-           (drop)="onDrop($event)"
-           (click)="fileInput.click()"
-           [class.drag-over]="isDragOver">
-        <div class="upload-icon">📄</div>
-        <h3>Upload PDF to start chatting</h3>
-        <p>Click or drag and drop your file here</p>
-        <input #fileInput type="file" accept=".pdf" (change)="onFileSelected($event)" style="display: none;">
-      </div>
-    </div>
-  `,
+  templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss']
 })
 export class FileUploadComponent {

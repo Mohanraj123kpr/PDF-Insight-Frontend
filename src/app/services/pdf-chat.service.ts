@@ -31,8 +31,4 @@ export class PdfChatService {
   askQuestion(question: string): Observable<ChatResponse> {
     return this.http.post<ChatResponse>(`${this.baseUrl}/ask-question`, { question });
   }
-
-  healthCheck(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/health`);
-  }
 }
