@@ -14,6 +14,7 @@ Angular application for PDF viewing with interactive chat functionality.
 - PDF.js for PDF rendering
 - TypeScript
 - SCSS for styling
+- GenerativeAI for chatting
 
 ## Setup
 
