@@ -1,6 +1,6 @@
 <div class="pdf-viewer-container">
   <!-- File Upload Section -->
-  <app-file-upload *ngIf="!pdfLoaded" (fileSelected)="onFileSelected($event)"></app-file-upload>
+  <app-file-upload *ngIf="!pdfLoaded && !isUploading" (fileSelected)="onFileSelected($event)"></app-file-upload>
 
   <!-- Progress Section -->
   <app-progress *ngIf="isUploading" [progress]="uploadProgress"></app-progress>

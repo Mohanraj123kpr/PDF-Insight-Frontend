@@ -97,18 +97,27 @@ export class PdfViewerComponent {
   // File upload methods
   onFileSelected(file: File): void {
     this.fileName = file.name;
+    this.pdfLoaded = false;
     this.isUploading = true;
+    this.uploadProgress = 0;
     this.simulateUpload(file);
   }
 
   simulateUpload(file: File): void {
-    this.uploadProgress = 0;
+    // Start progress simulation immediately
+    const progressInterval = setInterval(() => {
+      if (this.uploadProgress < 90) {
+        this.uploadProgress += 10;
+      }
+    }, 200);
     
     // Upload to backend
     this.pdfChatService.uploadPdf(file).subscribe({
       next: (response) => {
         console.log('PDF uploaded successfully:', response);
+        clearInterval(progressInterval);
         this.uploadProgress = 100;
+        
         setTimeout(() => {
           this.isUploading = false;
           this.pdfLoaded = true;
@@ -117,19 +126,12 @@ export class PdfViewerComponent {
       },
       error: (error) => {
         console.error('Upload failed:', error);
+        clearInterval(progressInterval);
         this.isUploading = false;
+        this.uploadProgress = 0;
         alert('Failed to upload PDF. Please try again.');
       }
     });
-    
-    // Simulate progress for UI
-    const interval = setInterval(() => {
-      if (this.uploadProgress < 90) {
-        this.uploadProgress += 10;
-      } else {
-        clearInterval(interval);
-      }
-    }, 200);
   }
 
   async loadPdfFromFile(file: File): Promise<void> {
