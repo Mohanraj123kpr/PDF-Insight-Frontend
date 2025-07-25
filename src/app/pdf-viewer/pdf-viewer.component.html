@@ -11,7 +11,14 @@
     <div class="pdf-panel">
       <div class="pdf-header">
         <h3>{{fileName}}</h3>
-        <button class="close-btn" (click)="closePdf()">×</button>
+        <div class="header-controls">
+          <div class="zoom-controls">
+            <button (click)="zoomOut()" [disabled]="currentScale <= minScale">−</button>
+            <span class="zoom-level">{{getZoomPercentage()}}%</span>
+            <button (click)="zoomIn()" [disabled]="currentScale >= maxScale">+</button>
+          </div>
+          <button class="close-btn" (click)="closePdf()">×</button>
+        </div>
       </div>
       <div #pdfContainer class="pdf-container"></div>
     </div>
