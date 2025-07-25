@@ -1,0 +1,39 @@
+.upload-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+  .upload-box {
+    background: white;
+    border: 2px dashed #e0e0e0;
+    border-radius: 12px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: 400px;
+    
+    &:hover, &.drag-over {
+      border-color: #8b5cf6;
+      background-color: #faf9ff;
+    }
+    
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    
+    h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+    }
+  }
+}

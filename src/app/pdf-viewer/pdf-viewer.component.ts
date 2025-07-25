@@ -4,22 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import * as pdfjs from "pdfjs-dist";
 import { PdfChatService, ChatResponse } from '../services/pdf-chat.service';
-
-interface ChatMessage {
-  content: string;
-  isUser: boolean;
-}
+import { FileUploadComponent } from '../components/file-upload/file-upload.component';
+import { ProgressComponent } from '../components/progress/progress.component';
+import { ChatComponent, ChatMessage } from '../components/chat/chat.component';
 
 @Component({
   selector: 'app-pdf-viewer',
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, FileUploadComponent, ProgressComponent, ChatComponent],
   templateUrl: './pdf-viewer.component.html',
   styleUrl: './pdf-viewer.component.scss'
 })
 
 export class PdfViewerComponent {
   @ViewChild('pdfContainer') pdfContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('chatMessages') chatMessages!: ElementRef<HTMLDivElement>;
   
   totalPages = 0;
   pdfUrl: any = '';
@@ -30,7 +27,6 @@ export class PdfViewerComponent {
   isUploading = false;
   uploadProgress = 0;
   fileName = '';
-  isDragOver = false;
   
   // Chat properties
   messages: ChatMessage[] = [];
@@ -66,7 +62,12 @@ export class PdfViewerComponent {
     // Create a new canvas for each page
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d')!;
-    const viewport = page.getViewport({ scale: 1.5 });
+    
+    // Calculate scale to fit container width
+    const containerWidth = this.pdfContainer.nativeElement.clientWidth - 40; // Account for padding
+    const baseViewport = page.getViewport({ scale: 1 });
+    const scale = Math.min(1.5, containerWidth / baseViewport.width);
+    const viewport = page.getViewport({ scale });
 
     canvas.width = viewport.width;
     canvas.height = viewport.height;
@@ -83,38 +84,7 @@ export class PdfViewerComponent {
   }
 
   // File upload methods
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragOver = true;
-  }
-
-  onDragLeave(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragOver = false;
-  }
-
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragOver = false;
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      this.handleFile(files[0]);
-    }
-  }
-
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.handleFile(file);
-    }
-  }
-
-  handleFile(file: File): void {
-    if (file.type !== 'application/pdf') {
-      alert('Please select a PDF file');
-      return;
-    }
-    
+  onFileSelected(file: File): void {
     this.fileName = file.name;
     this.isUploading = true;
     this.simulateUpload(file);
@@ -179,23 +149,13 @@ export class PdfViewerComponent {
   }
 
   // Chat methods
-  askQuestion(question: string): void {
-    this.currentQuestion = question;
-    this.sendMessage();
-  }
-
-  sendMessage(): void {
-    if (!this.currentQuestion.trim() || this.isProcessingQuestion) return;
-    
-    const question = this.currentQuestion;
+  onQuestionAsked(question: string): void {
     this.messages.push({
       content: question,
       isUser: true
     });
     
-    this.currentQuestion = '';
     this.isProcessingQuestion = true;
-    this.scrollToBottom();
     
     // Get response from backend
     this.pdfChatService.askQuestion(question).subscribe({
@@ -205,7 +165,6 @@ export class PdfViewerComponent {
           isUser: false
         });
         this.isProcessingQuestion = false;
-        this.scrollToBottom();
       },
       error: (error) => {
         console.error('Question failed:', error);
@@ -214,19 +173,8 @@ export class PdfViewerComponent {
           isUser: false
         });
         this.isProcessingQuestion = false;
-        this.scrollToBottom();
       }
     });
-  }
-
-
-
-  scrollToBottom(): void {
-    setTimeout(() => {
-      if (this.chatMessages) {
-        this.chatMessages.nativeElement.scrollTop = this.chatMessages.nativeElement.scrollHeight;
-      }
-    }, 100);
   }
 
   searchText(searchText: any): void {

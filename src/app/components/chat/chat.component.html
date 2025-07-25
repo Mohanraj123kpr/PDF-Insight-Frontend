@@ -1,0 +1,36 @@
+<div class="chat-panel">
+  <div class="chat-header">
+    <div class="status-indicator">
+      <span class="status-dot"></span>
+      <span>Your document is ready!</span>
+    </div>
+  </div>
+  
+  <div class="chat-content">
+    <div class="chat-intro">
+      <p>You can now ask questions about your document. For example:</p>
+      <div class="example-questions">
+        <button class="example-btn" (click)="askExampleQuestion('What is the main topic of this document?')">"What is the main topic of this document?"</button>
+        <button class="example-btn" (click)="askExampleQuestion('Can you summarize the key points?')">"Can you summarize the key points?"</button>
+        <button class="example-btn" (click)="askExampleQuestion('What are the conclusions or recommendations?')">"What are the conclusions or recommendations?"</button>
+      </div>
+    </div>
+    
+    <div class="chat-messages" #chatMessages>
+      <div *ngFor="let message of messages" class="message" [class.user]="message.isUser">
+        <div class="message-content">{{message.content}}</div>
+      </div>
+      <div *ngIf="isProcessing" class="message processing">
+        <div class="message-content">Processing your question...</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="chat-input">
+    <input type="text" 
+           placeholder="Ask about the document..." 
+           [(ngModel)]="currentQuestion"
+           (keyup.enter)="sendMessage()">
+    <button (click)="sendMessage()" [disabled]="!currentQuestion.trim() || isProcessing">→</button>
+  </div>
+</div>
